@@ -1,3 +1,14 @@
+score = [0, 0, 0]
+winning_score = 3
+
+const buttons = document.querySelectorAll('button');
+console.log(buttons)
+buttons.forEach((button) => {
+    button.addEventListener('click', () => {
+        playRound(button.id, getComputerChoice())
+    })
+})
+
 function getComputerChoice() {
     num = Math.floor(Math.random() * 3)
     options = ["Rock", "Paper", "Scissors"]
@@ -9,54 +20,65 @@ function playRound(playerSelection, computerSelection) {
     playerSanitized = playerSelection.toLowerCase()
     computerSanitized = computerSelection.toLowerCase()
 
+    let winner = 0
+    let outputText = ""
+
     if (playerSanitized == "rock") {
         if (computerSanitized == "rock") {
-            return [0, "Tie! Rock is Rock"]
+            winner = 0
+            outputText = "Tie! Rock is Rock"
         } else if (computerSanitized == "paper") {
-            return [2, "You Lose! Paper beats Rock"]
+            winner = 2
+            outputText = "You Lose! Paper beats Rock"
         } else if (computerSanitized == "scissors") {
-            return [1, "You win! Rock beats Scissors"]
+            winner = 1
+            outputText = "You win! Rock beats Scissors"
         }
     } else if (playerSanitized == "paper") {
         if (computerSanitized == "rock") {
-            return [1, "You win! Paper beats Rock"]
+            winner = 1
+            outputText = "You win! Paper beats Rock"
         } else if (computerSanitized == "paper") {
-            return [0, "Tie! Paper is Paper"]
+            winner = 0
+            outputText = "Tie! Paper is Paper"
         } else if (computerSanitized == "scissors") {
-            return [2, "You Lose! Scissors beats Paper"]
+            winner = 2
+            outputText = "You Lose! Scissors beats Paper"
         }
     } else if (playerSanitized == "scissors") {
         if (computerSanitized == "rock") {
-            return [2, "You lose! Rock beats Scissors"]
+            winner = 2
+            outputText = "You lose! Rock beats Scissors"
         } else if (computerSanitized == "paper") {
-            return [1, "You win! Scissors beats Paper"]
+            winner = 1
+            outputText = "You win! Scissors beats Paper"
         } else if (computerSanitized == "scissors") {
-            return [0, "Tie! Scissors is Scissors"]
+            winner = 0
+            outputText = "Tie! Scissors is Scissors"
         }
     } else {
-        return [0, "Uh oh! Player made incorrect play"]
+        winner = 0
+        outputText = "Uh oh! Player made incorrect play"
     }
-}
 
-function game() {
-    score = [0, 0, 0]
-    winning_score = 3
+    score[winner] +=1
+    document.querySelector("#computer").textContent = computerSelection
+    document.querySelector("#player").textContent = playerSelection
+    document.querySelector("#winner").textContent = outputText
+    document.querySelector("#score-computer").textContent = score[2]
+    document.querySelector("#score-player").textContent = score[1]
 
-    while (1) {
-        let playerChoice = prompt("Enter your play (rock, paper scissors): ")
-        const [winner, output] = playRound(playerChoice, getComputerChoice())
-        score[winner] +=1
-        console.log(output)
-
-        if (score[1] >= winning_score) {
-            console.log("You won!")
-            return
-        } else if (score[2] >= winning_score) {
-            console.log("Computer wins!")
-            return
+    if (score.reduce((partialSum, a) => partialSum + a, 0) >= 5 ) {
+        if (score[1] > score[2]) {
+            alert("Game over. You won!")
+        } else if (score[2] > score[1]) {
+            alert("Game over. You Lost!")
+        } else {
+            alert("Game over. Tie!")
         }
-        console.log("Next round")
+    } else if (score[1] >= 3) {
+        alert("Game Finished. You won!")
+    } else if (score[2] >= 3) {
+        alert("Game Finished. You lost!")
     }
 }
-
-game()
